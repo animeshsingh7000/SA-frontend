@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+    <defs>
+        <linearGradient id="prefix__a" x1="104.039%" x2="11.65%" y1="-33.667%" y2="108.099%">
+            <stop offset="0%" stop-color="#A9CD6F"/>
+            <stop offset="100%" stop-color="#7EB635"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <circle cx="30" cy="30" r="30" fill="#F3F8EC"/>
+        <g>
+            <path d="M0 0L36 0 36 36 0 36z" transform="translate(12 12)"/>
+            <path fill="url(#prefix__a)" fill-rule="nonzero" d="M25 10c.574 0 1.074.39 1.213.947l2.5 10c.194.776-.413 1.553-1.213 1.553h-1.25V30h-2.5v-7.5h-2.5V30h-2.5v-7.5H17.5c-.8 0-1.407-.777-1.213-1.553l2.5-10c.14-.557.64-.947 1.213-.947zM8.75 10c.69 0 1.25.56 1.25 1.25v10.076c0 .694-.565 1.249-1.25 1.248V30h-2.5v-8.75h-2.5V30h-2.5v-7.426c-.685 0-1.25-.554-1.25-1.248V11.25C0 10.56.56 10 1.25 10zM15 2.5v25h-2.5v-25H15zM22.5 0c2.757 0 5 2.243 5 5s-2.243 5-5 5-5-2.243-5-5 2.243-5 5-5zM5 0c2.757 0 5 2.243 5 5s-2.243 5-5 5-5-2.243-5-5 2.243-5 5-5z" transform="translate(12 12) translate(3 3)"/>
+        </g>
+    </g>
+</svg>

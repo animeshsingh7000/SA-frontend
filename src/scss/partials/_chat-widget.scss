@@ -1,0 +1,165 @@
+@import 'variables';
+@import 'mixin';
+
+.chat-widget {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: $white;
+  overflow: hidden;
+
+  @include media-breakpoint(sm) {
+    width: 100vw;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    border-radius: 20px 20px 0 0;
+  }
+
+  &__header {
+    background: $primary-button-background;
+    color: $primary-button-text;
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-radius: 20px 20px 0 0;
+    min-height: 70px;
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      padding: 4px;
+      margin-right: 12px;
+      object-fit: cover;
+    }
+    .title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      flex: 1;
+      @include font-bold;
+    }
+    .close {
+      background: none;
+      border: none;
+      color: $primary-button-text;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .back {
+      margin-right: 8px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: $primary-button-text;
+    }
+  }
+
+  &__messages {
+    background: $white;
+    padding: 20px;
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 0%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    font-size: 0.75rem;
+  }
+
+  &__messages > span {
+    /* Welcome message styling when no messages */
+    color: #888;
+    font-size: 0.95rem;
+    text-align: center;
+    align-self: center;
+    margin: auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  &__message {
+    max-width: 80%;
+    padding: 12px;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    margin-bottom: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    word-break: break-word;
+    white-space: pre-wrap;
+
+    &--bot {
+      background: #f4f8fb;
+      color: $theme-text;
+      align-self: flex-start;
+      border-top-left-radius: 0;
+    }
+    &--user {
+      background: #e3ecf7;
+      color: $theme-color;
+      align-self: flex-end;
+      border-top-right-radius: 0;
+    }
+    .timestamp {
+      display: block;
+      font-size: 0.60rem;
+      font-weight: 300;
+      color: $grey;
+      margin-top: 4px;
+      text-align: right;
+    }
+    .sender {
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: $theme-color;
+    }
+  }
+
+  &__input-area {
+    background: $white;
+    border-top: 1px solid $input-border-color;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      outline: none;
+      @include font-regular;
+      height: 32px;
+      &::placeholder {
+        color: $input-placeholder;
+      }
+    }
+    .attach {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: $grey;
+      cursor: pointer;
+      margin-right: 4px;
+    }
+    .send {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: $primary-button-background;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      &:enabled {
+        opacity: 1;
+      }
+    }
+  }
+} 

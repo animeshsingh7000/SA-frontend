@@ -1,0 +1,191 @@
+%hiddenDisabledArrow {
+    .glider-contain {
+      .glider-next.disabled, .glider-prev.disabled {
+        visibility: hidden;
+      }
+    }
+  }
+  
+  @mixin setArrowColor($color, $hoverColor, $focusColor: $color) {
+    .glider-next, .glider-prev {
+      color: $color;
+  
+      /* THIS IS IMPORTANT! */
+      /* Hover and focus can be in the same time, */
+      /* after click arrow have :focus and :hover. */
+      /* So the order of style is important. */
+      /* Try, what happening when change order and use arrows ;) */
+      &:focus {
+        /* Oryginal color, but on focus is is lighter */
+        color: $focusColor;
+      }
+  
+      &:hover {
+        color: $hoverColor;
+      }
+    }
+  }
+  
+  body {
+    margin: 0px;
+  }
+  .glider-next, .glider-prev{
+    display: none;
+  }
+  
+  .App {
+    font-family: sans-serif;
+    // text-align: center;
+  
+    position: relative;
+    // min-width: 100%;
+    // max-height: none;
+    // height: 100%;
+    // display: flex
+  }
+  
+  .photos-gallery {
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: none;
+    position: relative;
+    width: 100%;
+    height: 600px;
+    @include media-breakpoint(sm) {
+      height: 340px;
+    }
+   .sale-container {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      z-index: 2;
+      .sale-image {
+        width: 114px;
+        height: 41px;
+        background: url('/assets/images/sale-icon-big.svg') no-repeat;
+      }
+      .sale-txt {
+        color: #fff;
+        font-family: "montserratbold", sans-serif;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        font-size: 18px;
+        height: 41px;
+        padding-left: 23px;
+       }
+    }
+  }
+  
+  .glider {
+  //  /* Don't go this way, if You wanna swip */
+  //   overflow: hidden;
+    scrollbar-width: none;
+  }
+  
+  .photo-wrapper {
+    padding: 0px 0px;
+    margin: 0px auto;
+    height: 100%;
+    flex-grow: 1;
+    width: 100%;
+    height: 500px;
+    @include media-breakpoint(sm) {
+      height: 300px;
+    }
+  
+    .glider-contain {
+      height: 100%;
+  
+      .glider {
+        height: 100%;
+        .glider-slide{
+          min-width: fit-content;
+        }
+  
+        .glider-track {
+          height: 100%;
+        }
+      }
+    }
+  
+    .slide__content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+    
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+   .showallgallery{
+     background-color: #4d4747;
+     width: 25%;
+     height: 100px;
+     position: absolute;
+     bottom: 0;
+     right: 0;
+     display: flex;
+     align-items: center;
+     cursor: pointer;
+     font-family: montserratbold, sans-serif;
+     font-size: 18px;
+     text-decoration: underline;
+     color: white;
+     justify-content: center;
+    @include media-breakpoint(sm) {
+      height: 40px;
+      width: 100%;
+      font-size: 12px;
+    }
+   }
+  .thumbnails-wrapper {
+    padding: 0px 0px;
+    margin: 0px;
+    max-width: calc(100% - 25%);
+    height: 100px;
+  
+    .glider-slide + .glider-slide .slide__content {
+     margin: 0;
+
+    }
+    .draggable {
+      overflow: visible !important;
+    }
+    .glider-track{
+      width: 100% !important;
+    @include media-breakpoint(sm) {
+      display: none;
+    }
+    }
+     .glider-slide{
+       width: calc(100% /  5) !important;
+     }
+    .slide__content {
+      display: flex;
+      height: 100px;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      margin: 0px;
+      padding: 0px;
+      transition: ease-in-out .2s;
+  
+      &.--current-selected {
+        height: 120px;
+        margin-top: -20px !important;
+      }
+  
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+  

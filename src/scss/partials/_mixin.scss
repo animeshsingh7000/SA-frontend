@@ -1,0 +1,122 @@
+@mixin vendor-prefixes($property, $value) {
+    #{$property}: $value;
+    -webkit-#{$property}: $value;
+    -moz-#{$property}: $value;
+    -ms-#{$property}: $value;
+}
+
+@mixin placeholder {
+    &.placeholder { @content; }
+    &:-moz-placeholder { @content; }
+    &::-moz-placeholder { @content; }
+    &::-webkit-input-placeholder { @content; }
+}
+
+@mixin flexProperty($justifyContent: null,  $alignItems: null, $direction: null, $flexWrap: null) {
+    display: flex;
+    justify-content: $justifyContent;
+    align-items: $alignItems;
+    flex-direction: $direction;
+    flex-wrap: $flexWrap;
+}
+
+@mixin position($position, $top: null, $right: null, $bottom: null, $left: null) {
+    position: $position;
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+}
+
+@mixin font-regular {
+    font-family: 'montserratregular', sans-serif;
+}
+@mixin font-thin {
+    font-family: 'montserratthin', sans-serif;
+}
+@mixin font-semibold {
+    font-family: 'montserratsemibold', sans-serif;
+}
+@mixin font-medium {
+    font-family: 'montserratmedium', sans-serif;
+}
+@mixin font-light {
+    font-family: 'montserratlight', sans-serif;
+}
+@mixin font-italic {
+    font-family: 'montserratitalic', sans-serif;
+}
+@mixin font-extralight {
+    font-family: 'montserratextralight', sans-serif;
+}
+@mixin font-extrabold {
+    font-family: 'montserratextrabold', sans-serif;
+}
+@mixin font-bold {
+    font-family: 'montserratbold', sans-serif;
+}
+@mixin font-black {
+    font-family: 'montserratblack', sans-serif;
+}
+@mixin font-permanentRegular {
+    font-family: 'permanent_markerregular', sans-serif;
+}
+
+
+@mixin media-breakpoint($size) {
+    @if $size == sm {
+      @media (max-width: 767px) {
+        @content;
+      }
+    } @else if $size == md {
+      @media (min-width: 768px) {
+        @content;
+      }
+    } @else if $size == lg {
+      @media (min-width: 992px) {
+        @content;
+      }
+    } @else if $size == xl {
+      @media (min-width: 1200px) {
+        @content;
+      }
+    }
+  }
+  body::-webkit-scrollbar {
+    background-color: transparent;
+    width: 5px;
+  }
+  
+  body::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    background-color: #848484;
+    border-radius: 6px;
+    border: 0;
+  }
+  
+  body::-webkit-scrollbar-button {
+    display: none;
+  }
+  
+
+  .scrollbar::-webkit-scrollbar {
+    background-color: transparent;
+    width: 5px;
+  }
+  
+  .scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: #848484;
+    border-radius: 6px;
+    border: 0;
+  }
+  
+  .scrollbar::-webkit-scrollbar-button {
+    display: none;
+  }

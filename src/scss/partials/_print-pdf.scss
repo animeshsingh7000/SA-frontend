@@ -1,0 +1,13 @@
+@media print {
+	.breadcrumb-image-module,
+	.breadcrumb-links,
+	.left-sidebar,
+	.btn,
+	img,
+	footer{
+		display: none;
+	}
+	.invoice-logo img{
+		display: block;
+	}
+}

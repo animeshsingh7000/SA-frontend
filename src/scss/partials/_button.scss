@@ -1,0 +1,95 @@
+.btn {
+  @include font-bold;
+  font-size: 13px;
+  border-radius: 24px;
+  height: auto;
+  min-width: 149px;
+  padding: 11px 28px 10px;
+  &.big {
+    height: 60px;
+    padding: 20px 0;
+  }
+  &.btn-block {
+    width: 100%;
+  }
+  &.medium {
+    height: 32px;
+    padding: 6px 15px 5px;
+  }
+
+  &.primary {
+    color: $white !important;
+    border: 0;
+    border-color: transparent;
+    background: $primary-button-background !important;
+    text-transform: uppercase;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: transparent;
+    }
+    &.disabled,
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+  &.primary-outline {
+    border-radius: 2px;
+    border: solid 1px $primary-button-background;
+    background-color: #edf6f0;
+    color: $primary-button-background;
+  }
+  &.secondary {
+    @include font-bold;
+    font-size: 12px;
+    border: solid 1px $primary-button-background;
+    background-color: $white;
+    border-radius: 36px;
+    color: $primary-button-background;
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: $primary-button-background;
+      background-color: $white;
+      color: $primary-button-background;
+    }
+  }
+  &.btn-link {
+    min-width: inherit;
+    @include font-semibold;
+    color: #232323;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    font-size: 15px;
+  }
+  &.link {
+    min-width: inherit;
+    @include font-medium;
+    font-size: 13px;
+    color: $theme-color;
+    padding: 10px;
+    text-transform: uppercase;
+    background-color: transparent;
+    box-shadow: none;
+    &.secondary {
+      color: $theme-color;
+      border: 0;
+    }
+    &.primary {
+      color: $primary-button-background;
+    }
+  }
+  &.disabled,
+  &:disabled {
+    opacity: 1;
+  }
+  &:hover,
+  &:focus,
+  &:active {
+    outline: 0;
+    box-shadow: none;
+    border-color: transparent;
+  }
+}

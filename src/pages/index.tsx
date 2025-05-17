@@ -1,0 +1,19 @@
+export { default as Main } from "./Main";
+export { default as App } from "./App";
+export { default as Home } from "./Auth/Home";
+export { default as Header } from "./Header";
+export { default as Footer } from "./Footer";
+export { default as SignIn } from "./Auth/SignIn";
+export { default as ForgotPassword } from "./Auth/ForgotPassword";
+export { default as ResetPassword } from "./Auth/ForgotPassword/ResetPassword";
+export { default as Team } from "./Auth/StayCurrent/Team";
+export { default as FAQ }  from "./Auth/StayCurrent/Faq";
+export { default as Browse } from "./Auth/Browse";
+export { default as BrowseMap } from "./Auth/Browse/BrowseMap";
+export { default as PropertyDetail } from "./Auth/Browse/PropertyDetail";
+export { default as ContactUs } from "./Auth/StayCurrent/ContactUs";
+export { default as News }  from "./Auth/StayCurrent/News";
+export { default as NewsDetail } from "./Auth/StayCurrent/News/NewsDetail";
+export { default as PrivacyPolicy } from "./Auth/StayCurrent/Privacy";
+export { default as TeamMemberDetail } from "./Auth/StayCurrent/Team/TeamMemberDetail";
+

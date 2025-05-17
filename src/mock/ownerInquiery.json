@@ -1,0 +1,63 @@
+{
+  "data": {
+    "ownerInquiries": [
+      {
+        "_id": "663f3dabed94aa7075dd43b3",
+        "firstName": "Sonali",
+        "lastName": "Das",
+        "email": "sonali001@mailinator.com",
+        "address": {
+          "addressLine1": "D-31",
+          "city": "Seattle",
+          "state": "District of Columbia",
+          "postalCode": "9801",
+          "country": "united-states"
+        },
+        "unitSize": 123,
+        "unitBedrooms": "OneBed",
+        "unitBathrooms": "TwoBath",
+        "mobile": "6787632345",
+        "propertyAvailableFrom": "2024-05-10T00:00:00.000Z",
+        "minimumReservationTerm": 20,
+        "createdBy": null,
+        "updatedBy": null,
+        "status": 0,
+        "createdAt": "2024-05-11T09:43:07.789Z",
+        "updatedAt": "2024-05-11T09:43:07.789Z",
+        "__v": 0
+      },
+      {
+        "_id": "663f0a1bed94aa7075dd438a",
+        "firstName": "Sonali",
+        "lastName": "Das",
+        "email": "sonali@mailinator.com",
+        "alternateEmail": "sonali@yopmail.com",
+        "address": {
+          "addressLine1": "D-31",
+          "city": "Seattle",
+          "state": "District of Columbia",
+          "postalCode": "9801",
+          "country": "united-states"
+        },
+        "unitSize": 123,
+        "unitBedrooms": "OneBed",
+        "unitBathrooms": "OneBath",
+        "homePhoneNo": "7837382121",
+        "workPhoneNo": "6738831234",
+        "mobile": "6783932345",
+        "propertyAvailableFrom": "2024-05-10T00:00:00.000Z",
+        "askUsAnything": "ok",
+        "minimumReservationTerm": 30,
+        "createdBy": null,
+        "updatedBy": null,
+        "status": 0,
+        "createdAt": "2024-05-11T06:03:07.739Z",
+        "updatedAt": "2024-05-11T06:03:07.739Z",
+        "__v": 0
+      }
+    ],
+    "totalOwnerInquiriesCount": 2
+  },
+  "error": null,
+  "message": "Owner enquiries list response"
+}

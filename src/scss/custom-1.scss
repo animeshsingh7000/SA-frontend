@@ -1,0 +1,50 @@
+@import "config/variables";
+// Override default variables before the import
+$theme-colors: (
+  "primary": $base-color,
+  "secondary": $blue,
+  "success": $green,
+  "danger": $error,
+  "warning": $yellow,
+  "info": $suggestion,
+  "light": $gray,
+  "dark": $black,
+);
+
+//@import  "rsuite/dist/rsuite.min.css";
+// Import Bootstrap and its default variables
+@import "rsuite/dist/rsuite.css";
+
+@import "~bootstrap/scss/bootstrap.scss";
+
+@import "config/media-queries", "base/__base", "components/__components",
+  "layout/__layout";
+
+  html,
+  body {
+    ::-webkit-scrollbar {
+      background-color: transparent;
+      width: 5px;
+      max-height: 5px;
+    }
+  
+    ::-webkit-scrollbar-thumb {
+      -webkit-transition: background-color 0.1s ease;
+      transition: background-color 0.1s ease;
+      border-radius: 10px;
+      // -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+      background-color: #9f9d9d;
+      max-height: 5px;
+
+    }
+  
+    ::-webkit-scrollbar-track {
+      // -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+      border-radius: 6px;
+      background-color: #F5F5F5;
+      max-height: 5px;
+
+    }
+  }

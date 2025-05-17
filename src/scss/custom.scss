@@ -1,0 +1,36 @@
+@import "~bootstrap/scss/bootstrap.scss";
+
+// Custom variables
+@import "partials/variables";
+@import "partials/fonts";
+@import "partials/mixin";
+@import "partials/button";
+@import "partials/form";
+@import "partials/base";
+@import "partials/home";
+@import "partials/modal";
+
+@import "partials/header";
+@import "partials/pages";
+
+@import "partials/login-page";
+@import "partials/detail-page";
+@import "partials/left-sidebar";
+@import "partials/rental-inquiry";
+@import "partials/owner";
+@import "partials/print-pdf";
+@import "partials/owner-inquery-static";
+@import "partials/owner-dashboard";
+@import "partials/owner-lease";
+@import "partials/matching-property";
+@import "partials/contact";
+@import "partials/glider";
+@import "partials/login-page";
+@import "partials/admin-new-design";
+@import 'partials/chat-widget';
+
+@import 'react-datepicker/dist/react-datepicker.css';
+@import 'glider-js/glider.min.css';
+@import "rsuite/dist/rsuite.css";
+@import "react-datetime/css/react-datetime.css";
+

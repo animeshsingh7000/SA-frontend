@@ -1,0 +1,81 @@
+/*=============================================
+*   screen width
+=============================================*/
+
+//-----------Custom variables will goes here
+$white:                                         #fff;
+$black:                                         #000;
+$grey :                                         #707070;
+
+$theme-color:                                   #1a1b29 !default;
+$theme-text:                                    #5d5d5d  !default;
+$theme-secondary-text:                          #1f1d1d !default;
+$theme-main-background:                         #f4f5f7 !default;
+$link-color:                                    #4084bf !default;
+
+// Button
+$primary-button-background:                     #3ca160 !default;
+$primary-button-text:                           #FFFFFF !default;
+$secondary-button-background:                   #2b2e41 !default;
+$secondary-button-text:                         #FFFFFF !default;
+$btn-link-background:                           #FFFFFF !default;
+$btn-link-text:                                 #ed243c !default;
+$btn-link-border:                                 transparent !default;
+$gray-color:                                    #383838;
+$list-color:                                    #616161;
+// Form
+$input-background:                              #f5f5f5;
+$input-border-color:                            #e9ebf1;
+$input-border-active-color:                     #e1e7f6;
+$input-placeholder:                             #5d5d5d;
+$input-text:                                    #424865;
+$input-label-color:                             rgba(#7a7e93, 0.8);
+$error-color:                                   #ed243c;
+$success-color:                                 #58ac86;
+$input-focus-border-color:                      rgba(#7a7e93, 0.6);
+$email-color: 									#5e5f63;
+
+// Search
+$search-placeholder-color:                      #c7c7c7;
+$search-color:                                  #424865;
+
+// Alert
+$alert-success-background:                      #e1f7ed;
+$alert-success-color:                           #58ac86;
+$alert-warning-background:                      #fff5f4;
+$alert-warning-color:                           #da4949;
+
+// Modal
+$modal-header-background:                       #d7efe4;
+$modal-close-color:                             #567366;
+
+// custom dropdown
+$dropdown-background:                           #f3f3f6;
+$dropdown-text:                                 #7a7e93;
+
+// Checkbox and radio
+$checkbox-background:                           #f0f0f0;
+$big-checkbox-color:                            #0f1d17;
+$big-checkbox-background:                       #e4e4e4;
+$big-checkbox-active-color:                     #0f1d17;
+$big-checkbox-active-background:                #a7d6c1;
+$big-checkbox-disable-color:                    #d6d6d6;
+$big-checkbox-disable-background:               #f6f6f6;
+$big-checkbox-lock-color:                       #e5e5e5;
+
+// Header
+$header-text:                                   rgba($theme-color, 0.5);
+$header-text-active:                            $theme-color;
+$header-background:                             #FFFFFF;
+
+// Signup
+$container-border:                              #e5e5e5;
+
+// Table
+$table-header-color:                            #7a7e93;
+$table-main-color:                              #000000;
+
+//heading color
+$heading-theme-color:                           #3ca160 !default;
+$bgcolor-grey: #e8e9eb;
+$greyLight: #4B5563;

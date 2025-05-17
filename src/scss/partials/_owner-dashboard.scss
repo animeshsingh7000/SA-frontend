@@ -1,0 +1,233 @@
+.owner-dashboard-breadcrumb-module {
+  &::before {
+    content: 'Owners';
+    opacity: 0.05;
+    @include font-black;
+    font-size: 60px;
+    color: $primary-button-background;
+    position: absolute;
+    right: 244px;
+    top: 25px;
+    text-transform: uppercase;
+  }
+}
+
+.plus-on-btn {
+  padding: 5px 28px 3px;
+
+  @include media-breakpoint(sm) {
+    position: absolute;
+    top: -29px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    min-width: inherit;
+    border-radius: 50%;
+    line-height: inherit;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .plus-text {
+    @include font-semibold;
+    font-size: 22px;
+    display: inline-block;
+    vertical-align: -3px;
+    margin-right: 5px;
+
+    @include media-breakpoint(sm) {
+      font-size: 30px;
+      vertical-align: inherit;
+      margin-right: 0;
+      margin-top: 4px;
+    }
+  }
+
+  .add-property {
+    @include media-breakpoint(sm) {
+      display: none;
+    }
+  }
+}
+
+.add-property-btn-wrap {
+  padding: 55px 60px 27px 60px;
+
+  @include media-breakpoint(sm) {
+    padding: 0;
+    position: relative;
+  }
+}
+
+.owner-dashboard-items {
+  padding: 0 60px;
+
+  @include media-breakpoint(sm) {
+    padding: 35px 30px 0 30px;
+  }
+
+  .row {
+    margin-left: -25px;
+    margin-right: -25px;
+
+    @include media-breakpoint(sm) {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    &>div {
+      padding-left: 25px;
+      padding-right: 25px;
+
+      @include media-breakpoint(sm) {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+.owner-dashboard-card {
+  box-shadow: 0 2px 24px 0 rgba(0, 0, 0, 0.1);
+  background-color: $white;
+  margin-bottom: 42px;
+  position: relative;
+  padding: 22px 10px 4px 20px;
+
+  @include media-breakpoint(sm) {
+    margin-bottom: 15px;
+    padding: 15px 10px 5px 20px;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    box-shadow: 0 2px 24px 0 rgba(0, 0, 0, 0.1);
+    background-color: $primary-button-background;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
+  &.total-properties {
+    &::before {
+      background-color: $primary-button-background;
+    }
+
+    &::after {
+      width: 96px;
+      height: 79px;
+      background: url('/assets/images/owner-sidebar/total-property.svg') no-repeat;
+      background-size: 100%;
+
+      @include media-breakpoint(sm) {
+        width: 59px;
+        height: 50px;
+      }
+    }
+  }
+
+  &.current-leases {
+    &::before {
+      background-color: #cfb800;
+    }
+
+    &::after {
+      width: 66px;
+      height: 81px;
+      background: url('/assets/images/owner-sidebar/current-leases.svg') no-repeat;
+      background-size: 100%;
+
+      @include media-breakpoint(sm) {
+        width: 38px;
+        height: 50px;
+      }
+    }
+  }
+
+  &.service-request {
+    &::before {
+      background-color: rgba(154, 154, 154, 0.68);
+    }
+
+    &::after {
+      width: 89px;
+      height: 74px;
+      background: url('/assets/images/owner-sidebar/service-request-bg.svg') no-repeat;
+      background-size: 100%;
+
+      @include media-breakpoint(sm) {
+        width: 53px;
+        height: 43px;
+      }
+    }
+  }
+
+  &.todo-list {
+    &::before {
+      background-color: rgba(181, 182, 188, 0.68);
+    }
+
+    &::after {
+      width: 73px;
+      height: 86px;
+      background: url('/assets/images/owner-sidebar/todo-list-bg.svg') no-repeat;
+      background-size: 100%;
+
+      @include media-breakpoint(sm) {
+        width: 42px;
+        height: 50px;
+      }
+    }
+  }
+
+  &.total-earnings {
+    &::before {
+      background-color: $link-color;
+    }
+
+    &::after {
+      width: 54px;
+      height: 93px;
+      background: url('/assets/images/owner-sidebar/money.svg') no-repeat;
+      background-size: 100%;
+
+      @include media-breakpoint(sm) {
+        width: 27px;
+        height: 50px;
+      }
+    }
+  }
+
+  h6 {
+    @include font-semibold;
+    font-size: 14px;
+    color: $black;
+    text-transform: uppercase;
+
+    @include media-breakpoint(sm) {
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+  }
+
+  .owner-dashboard-card-count {
+    @include font-bold;
+    font-size: 40px;
+    color: $theme-color;
+
+    @include media-breakpoint(sm) {
+      font-size: 30px;
+    }
+  }
+}

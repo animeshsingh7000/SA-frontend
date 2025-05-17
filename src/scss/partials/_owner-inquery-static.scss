@@ -1,0 +1,104 @@
+.owner-inquiry-btn {
+  margin: 25px 0 30px 0;
+  &.faded {
+    opacity: 1;
+    color: #f3f9ff !important;
+    background-color: #b8dcc5 !important;
+  }
+}
+
+.owner-static-wrapper {
+  .container {
+    @media (min-width: 1200px) {
+      padding: 0 20px;
+      max-width: 1200px;
+    }
+  }
+}
+
+.owner-static-content {
+  padding: 20px 0 35px 0;
+  margin-bottom: 50px;
+
+  @include media-breakpoint(sm) {
+    padding: 0 0 35px 0;
+  }
+}
+
+.section-wrap {
+  margin-top: 30px;
+
+  h5 {
+    @include font-semibold;
+    font-size: 16px;
+    line-height: 24px;
+    color: $theme-secondary-text;
+    margin-bottom: 5px;
+  }
+
+  p {
+    font-size: 14px;
+    color: $theme-secondary-text;
+    line-height: 24px;
+    margin: 0;
+  }
+}
+
+.green-bullet-list {
+  margin: 25px 0 0 0;
+  padding-left: 10px;
+
+  li {
+    position: relative;
+    padding-left: 15px;
+    font-size: 14px;
+    color: $theme-secondary-text;
+
+    &::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      background-color: $primary-button-background;
+      display: inline-block;
+      border-radius: 50%;
+      position: absolute;
+      left: 0;
+      top: 6px;
+    }
+  }
+}
+
+.mt-60 {
+  margin-top: 60px;
+}
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.admin-owner-inquiry {
+  .inquiry-action-btn {
+    margin: 10px 0px;
+    button {
+      font-size: 12px;
+      text-transform: capitalize;
+      text-decoration:none;
+      background: transparent !important;
+      ._icons {
+        width: 15px;
+        height: 15px;
+      }
+      &.rejected,
+      &.delete {
+        color: $btn-link-text !important;
+      }
+      &.edit,
+      &.approve {
+        color: $primary-button-background !important;
+      }
+    }
+  }
+}
+
+.search-bar {
+
+}

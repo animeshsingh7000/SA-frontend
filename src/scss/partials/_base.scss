@@ -1,0 +1,494 @@
+* {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  text-rendering: auto;
+}
+
+ul,
+ol,
+li {
+  list-style-type: none;
+}
+
+a {
+  color: $primary-button-background;
+  outline: none;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover,
+  &:focus,
+  &:active {
+    outline: 0;
+    text-decoration: none;
+  }
+}
+
+body {
+  @include font-regular;
+  font-size: 15px;
+  background-color: $white;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+}
+
+h4 {
+  @include font-black;
+  font-size: 20px;
+  line-height: 1.33;
+  color: $theme-color;
+
+  @include media-breakpoint(md) {
+    font-size: 30px;
+  }
+}
+
+.container {
+  max-width: 100%;
+  padding: 0 15px;
+
+  @include media-breakpoint(xl) {
+    padding: 0 120px;
+  }
+}
+
+.container-btn {
+  @include media-breakpoint(sm) {
+    text-align: center;
+
+    .btn {
+      margin: auto;
+    }
+  }
+}
+
+.datepicker {
+  .form-control {
+    font-size: 13px;
+    background: transparent;
+    padding: 0;
+    border: 0;
+
+    &::placeholder {
+      font-size: 13px;
+    }
+  }
+}
+
+.input-group-append {
+  display: none;
+}
+
+.container-fluid {
+  padding: 0;
+}
+.neighborhood-dropdown {
+  padding: 0 0 !important;
+  overflow: hidden;
+  max-width: 160px;
+  min-width: 160px;
+
+  @include media-breakpoint(sm) {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  &.active {
+    background-color: #3ca160 !important;
+
+    .select2-search.select2-search--inline {
+      position: relative;
+      z-index: 1;
+
+      &::before {
+        content: "Neighborhood";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        color: #fff;
+        font-size: 13px;
+        z-index: 2;
+      }
+    }
+  }
+
+  .select2-container {
+    min-width: 100%;
+    width: 100% !important;
+  }
+
+  .select2-selection__rendered {
+    .select2-selection__choice {
+      display: none !important;
+    }
+
+    .select2-search.select2-search--inline {
+      .select2-search__field {
+        position: relative;
+        z-index: 2;
+        padding-right: 16px;
+        margin-top: 0 !important;
+        text-align: center;
+        cursor: pointer;
+        color: #000;
+
+        &::placeholder {
+          color: #000;
+        }
+      }
+    }
+  }
+}
+
+.parentDiv {
+  position: relative;
+  min-width: 160px;
+
+  .select2-container.select2-container--default.select2-container--open {
+    .select2-results__options {
+      .select2-results__option {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .select2-dropdown {
+    @include media-breakpoint(xl) {
+      min-width: 20em;
+      width: 100% !important;
+    }
+  }
+}
+
+.arrow-icon {
+  position: absolute;
+  right: 4px;
+  top: 0;
+  transform: rotate(90deg);
+  z-index: 1;
+}
+
+/* alert css */
+.alert {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 32px;
+  z-index: 1100;
+  max-width: 370px;
+  width: 100%;
+  height: 65px;
+  box-shadow: 0 2px 14px 0 rgba(0, 0, 0, 0.2);
+  font-size: 13px;
+  color: #fff;
+  padding: 20px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+
+  .alert-wrapper {
+    display: flex;
+
+    span {
+      img {
+        min-width: 22px;
+      }
+    }
+
+    .text {
+      margin-left: 10px;
+    }
+  }
+
+  &.alert-success {
+    background-color: #3ca160;
+  }
+
+  &.alert-error {
+    background-color: #e14b4b;
+    max-width: 250px;
+  }
+}
+
+/* alert css end*/
+.select2-container--open > .select2-dropdown {
+  border-width: 0 !important;
+}
+
+.select2-results {
+  border-width: 0 !important;
+
+  .select2-results__options {
+    border: solid 1px #e9e9e9 !important;
+  }
+}
+
+.owner-property-details-container {
+  max-width: 100% !important;
+  padding: 0 56px !important;
+
+  @include media-breakpoint(sm) {
+    padding: 0 15px !important;
+  }
+
+  .owner-property-status {
+    position: static;
+    display: inline-block;
+    padding: 6px 12px;
+    line-height: 1;
+    margin-left: 12px;
+    margin-bottom: 10px;
+  }
+}
+
+.back-and-button-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 56px 25px 56px;
+
+  @include media-breakpoint(sm) {
+    padding: 15px 15px 20px 15px;
+  }
+}
+
+.back-icon {
+  width: 24px;
+  height: 24px;
+  background: url("/assets/images/left-arrow-icon.svg") no-repeat;
+  background-size: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.back-white-icon {
+  width: 20px;
+  height: 20px;
+  background: url("/assets/images/left-arrow-icon-white.svg") no-repeat;
+  background-size: 100%;
+  display: inline-block;
+  vertical-align: middle;
+  transform: rotate(-90deg);
+  margin-left: 5px;
+}
+
+.back-text {
+  display: inline-block;
+  vertical-align: middle;
+  color: #232323;
+  font-size: 13px;
+  text-decoration: underline;
+  @include font-medium;
+  // margin-left: -3px;
+}
+
+.owner-property-detail-container {
+  max-width: 100% !important;
+  padding: 0 30px !important;
+
+  @include media-breakpoint(sm) {
+    padding: 0 15px !important;
+  }
+}
+
+.label-text {
+  margin: 0;
+  color: rgba(26, 27, 41, 0.7);
+  font-size: 12px;
+  @include font-semibold;
+  margin-bottom: 6px;
+}
+
+.label-data {
+  margin: 0;
+  color: $black;
+  font-size: 15px;
+  @include font-medium;
+}
+
+.wrap-all-label-data {
+  padding: 38px 25px;
+
+  .mt-50 {
+    @include media-breakpoint(md) {
+      margin-top: 50px;
+    }
+  }
+
+  .mt-25 {
+    @include media-breakpoint(sm) {
+      margin-top: 25px;
+    }
+  }
+}
+
+.form-wid-new {
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.remove-minus-margin-mobile {
+  @include media-breakpoint(sm) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.pd0-mobile {
+  @include media-breakpoint(sm) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.login-form-padding {
+  padding: 0 20px;
+}
+
+.owner-inquery-helper-text {
+  @include font-regular;
+  font-size: 14px;
+  color: #1a1b29;
+  line-height: 26px;
+  border-radius: 10px 10px 0 0;
+  background-color: #f6f6f6;
+  margin: -30px -30px 30px -30px;
+  padding: 15px 85px;
+  text-align: center;
+
+  @include media-breakpoint(sm) {
+    border-radius: 6px;
+    margin: 0 0 20px 0;
+    padding: 15px;
+  }
+ 
+}
+
+.normal-link {
+  color: #3ca160;
+  text-decoration: underline;
+
+  &:hover {
+    color: #3ca160;
+    text-decoration: underline;
+  }
+}
+
+ul {
+  &.phones,
+  &.emailAddresses {
+    li {
+      a,
+      a:hover {
+        color: #3ca160;
+      }
+    }
+  }
+}
+
+.add_tag_link {
+  text-decoration: underline;
+  color: #3ca160;
+  margin-bottom: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  span {
+    font-size: 30px;
+    display: inline-block;
+    vertical-align: -6px;
+    line-height: 1;
+  }
+}
+
+.remove-link {
+  text-align: right;
+}
+
+.remove-tag {
+  color: #ff0000 !important;
+  font-size: 14px;
+  text-decoration: underline;
+  @include font-medium;
+
+  &:hover {
+    color: #ff0000 !important;
+    text-decoration: underline;
+  }
+}
+
+.placeholder-input {
+  padding: 23px 20px 19px !important;
+  margin-bottom: 0;
+
+  & + label {
+    font-size: 12px;
+    margin-top: 0 !important;
+    opacity: 0.7;
+  }
+}
+
+.lease-only-input {
+  padding-top: 60px !important;
+}
+
+.lease-only-label {
+  label {
+    max-width: 645px;
+  }
+}
+
+.minimum-term-para {
+  color: rgba(26, 27, 41, 0.7);
+  font-size: 14px;
+  @include font-medium;
+}
+
+.top-seperator {
+  border-top: 1px solid rgba(26, 27, 41, 0.1);
+  padding-top: 50px;
+}
+
+#rental-inquiry-form-p-2 {
+  .form-group {
+    &.input-form {
+      & > label[for="fe_rental_request_type_latestDecisionDate"] {
+        @include media-breakpoint(sm) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+#rental-inquiry-form {
+  .rental-form-footer {
+    .container {
+      @include media-breakpoint(sm) {
+        margin-bottom: 0;
+        margin-top: 20px;
+        flex-direction: row !important;
+      }
+    }
+  }
+}

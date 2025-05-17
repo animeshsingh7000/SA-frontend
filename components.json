@@ -1,0 +1,16 @@
+{
+  "style": "default",
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/index.css",
+    "baseColor": "zinc",
+    "cssVariables": true
+  },
+  "componentPath": "src/components/ui",
+  "rsc": false,
+  "typescript": true,
+  "aliases": {
+    "utils": "@/lib/utils",
+    "components": "@/components"
+  }
+} 
