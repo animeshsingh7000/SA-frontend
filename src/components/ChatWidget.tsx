@@ -8,6 +8,8 @@ import { NoData } from "../components";
 import placeHolder from "../assets/images/placeHolder.png";
 import BrowsePropertiesInChat from './BrowsePropertiesInChat';
 import { BEDROOM_OPTIONS } from '../constants';
+import { mcpChatbotLoop } from '../chatbot/mcpChatbotLoop';
+import { useRoleAccess } from '../hooks/useRoleAccess';
 
 interface ChatWidgetProps {
   onClose?: () => void;
@@ -79,11 +81,25 @@ INTENT DETECTION & API MAPPING
 • Wait for the MCP's tool response before composing the final reply to the user.
 • If no API call is needed, answer directly from Stay Attaché knowledge base.
 
+========================
+CONVERSATIONAL REFINEMENT & MULTI-INTENT HANDLING
+========================
+• Users may reply with both an affirmation and a new filter in a single message (e.g., "yes I want 2 bhk").
+• Always treat such responses as BOTH:
+  – Affirmation to proceed with refinement, AND
+  – A new filter specification to be extracted and applied.
+• Extract all relevant filters from the user's message, even if combined with "yes", "sure", etc.
+• Map property terms like "2 bhk", "3 bhk", "studio", etc., to the correct API values:
+  – "2 bhk", "2-bedroom", "2 bed", "two bedrooms" → "TwoBed"
+  – "3 bhk", "3-bedroom", "three bedrooms" → "ThreeBed"
+  – "studio" → "Studio"
+• When a filter is specified, immediately call the API with the updated filters and show results, without further prompting.
+• If the user only says "yes" or "no", proceed as usual.
+
 =========
 EXAMPLES
 =========
 User: "Show me 2-bed apartments in Dupont Circle starting June 1."
-
 
 → Intent: property search → "/listing/list"
 → JSON:
@@ -126,7 +142,62 @@ User: "June 1 to June 15."
 User: "How do I open a bank account in the USA?"
 → Out of scope → refusal as per style guide.
 
+---
 
+# Additional Few-Shot Examples for Multi-Intent and Refinement
+
+User: Would you like to refine these results with more filters? (yes/no)
+User: yes
+Assistant: What additional filters would you like to add? (e.g., bedrooms, budget, amenities, neighborhoods, dates, parking, pets)
+
+User: Would you like to refine these results with more filters? (yes/no)
+User: yes I want 2 bhk
+Assistant: [JSON]
+{
+  "action": "call_api",
+  "endpoint": "/listing/list",
+  "params": { "bedrooms": ["TwoBed"], "page": 1, "count": 5 },
+  "token": "<JWT>",
+  "purpose": "fetch property availability"
+}
+[/JSON]
+
+User: yes, show me 3 bhk properties
+Assistant: [JSON]
+{
+  "action": "call_api",
+  "endpoint": "/listing/list",
+  "params": { "bedrooms": ["ThreeBed"], "page": 1, "count": 5 },
+  "token": "<JWT>",
+  "purpose": "fetch property availability"
+}
+[/JSON]
+
+User: yes, 2 bhk with parking and pet allowed
+Assistant: [JSON]
+{
+  "action": "call_api",
+  "endpoint": "/listing/list",
+  "params": { "bedrooms": ["TwoBed"], "isParking": true, "isPetAllowed": true, "page": 1, "count": 5 },
+  "token": "<JWT>",
+  "purpose": "fetch property availability"
+}
+[/JSON]
+
+User: Would you like to refine these results with more filters? (yes/no)
+User: no
+Assistant: Okay! Let me know if you need anything else.
+
+User: yes, maybe 1 or 2 bhk in Dupont Circle
+Assistant: [JSON]
+{
+  "action": "call_api",
+  "endpoint": "/listing/list",
+  "params": { "bedrooms": ["OneBed", "TwoBed"], "neighborhoods": ["Dupont Circle"], "page": 1, "count": 5 },
+  "token": "<JWT>",
+  "purpose": "fetch property availability"
+}
+[/JSON]
 
 ===========================
 SECURITY & PRIVACY RULES
@@ -314,8 +385,8 @@ const PROPERTY_PARAMS = [
 
 // Improved intent detection: require both an action word and a property keyword
 function isPropertySearchIntent(message: string): boolean {
-  const propertyKeywords = ['apartment', 'property', 'bedroom', 'house', 'flat', 'condo', 'listing', 'place', 'accommodation'];
-  const actionWords = ['show', 'find', 'see', 'browse', 'search', 'list', 'available', 'looking for', 'want', 'need'];
+  const propertyKeywords = ['apartment', 'property', 'bedroom', 'house', 'flat', 'condo', 'listing', 'place', 'accommodation', 'bhk', 'bed'];
+  const actionWords = ['show', 'find', 'see', 'browse', 'search', 'list', 'available', 'looking for', 'want', 'need', 'help'];
   const lower = message.toLowerCase();
   const hasProperty = propertyKeywords.some(word => lower.includes(word));
   const hasAction = actionWords.some(word => lower.includes(word));
@@ -400,6 +471,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
+  const { canAccessTool, getAccessError } = useRoleAccess();
   const [propertySearchSession, setPropertySearchSession] = useState(defaultPropertySearchSession);
   const [propertySearchMode, setPropertySearchMode] = useState<{ active: boolean, step: number, values: any }>({ active: false, step: 0, values: {} });
 
@@ -421,6 +493,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ onClose }) => {
     const userMsg: Message = {
       message: message,
       type: 'user',
+      sender: 'user',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
     setMessages(prev => [...prev, userMsg]);
@@ -444,17 +517,45 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ onClose }) => {
 
     // Handle user response to refinement prompt
     if (messages.length > 0 && messages[messages.length - 1].message === 'Would you like to refine these results with more filters? (yes/no)') {
-      if (/^yes$/i.test(message.trim())) {
-        setMessages(prev => ([
-          ...prev,
-          {
-            message: 'What additional filters would you like to add? (e.g., bedrooms, budget, amenities, neighborhoods, dates, parking, pets)',
-            type: 'bot',
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          }
-        ]));
-        setLoading(false);
-        return;
+      const lowerMsg = message.trim().toLowerCase();
+      if (/^yes\b/.test(lowerMsg)) {
+        // Try to extract filter from the rest of the message
+        const filterPart = lowerMsg.replace(/^yes\b[\s,]*/i, '');
+        if (filterPart.length > 0) {
+          // Try to extract property search params from the filter part
+          const userInputs = extractUserInputs(filterPart);
+          const params = {
+            ...mapToApiParams(userInputs),
+            page: 1,
+            count: 5
+          };
+          setMessages(prev => ([
+            ...prev,
+            {
+              message: <BrowsePropertiesInChat key={Date.now()} params={params} />,
+              type: 'bot',
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            },
+            {
+              message: 'Would you like to refine these results with more filters? (yes/no)',
+              type: 'bot',
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }
+          ]));
+          setLoading(false);
+          return;
+        } else {
+          setMessages(prev => ([
+            ...prev,
+            {
+              message: 'What additional filters would you like to add? (e.g., bedrooms, budget, amenities, neighborhoods, dates, parking, pets)',
+              type: 'bot',
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }
+          ]));
+          setLoading(false);
+          return;
+        }
       } else if (/^no$/i.test(message.trim())) {
         setMessages(prev => ([
             ...prev,
@@ -563,130 +664,47 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ onClose }) => {
       return;
     }
 
+    // MCP Chatbot Loop: Use MCP backend for all other messages
     try {
-      // Collect all previous messages to provide context to the AI
-      const messageHistory = messages.map(msg => ({
-        role: msg.type === 'user' ? 'user' : 'assistant',
-        content: msg.message
-      }));
-      
-      // Add the new user message
-      messageHistory.push({
-        role: 'user',
-        content: message
-      });
-      
-      // Create the complete messages array with system prompt
-      const completeMessages = [
-        {
-          role: 'system',
-          content: SYSTEM_PROMPT
-        },
-        ...messageHistory
-      ];
-      
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${process.env.REACT_APP_OPENROUTER_API_KEY}`,
-          'HTTP-Referer': process.env.REACT_APP_SITE_URL || 'https://stayattache.com',
-          'X-Title': process.env.REACT_APP_SITE_NAME || 'Stay Attache',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'google/gemini-flash-1.5',
-          messages: sanitizeMessages(completeMessages),
-        }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Error connecting to OpenRouter');
-      }
-      
-      const data = await response.json();
-      let botReply = "Sorry, I didn't get a valid response from the AI service.";
-      if (
-        data &&
-        Array.isArray(data.choices) &&
-        data.choices.length > 0 &&
-        data.choices[0].message &&
-        data.choices[0].message.content
-      ) {
-        botReply = data.choices[0].message.content;
-      }
-
-      // Always check for intent in every bot reply
-      const intent = extractIntentData(botReply);
-      if (intent && intent.action === 'call_api') {
-        // If property search, render the component directly
-        if (intent.endpoint === '/api/v1/listing/list') {
-          setMessages(prev => ([
-            ...prev,
-            {
-              message: <BrowsePropertiesInChat key={Date.now()} params={intent.params} />,
-              type: 'bot',
-              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }
-          ]));
-          setLoading(false);
-          return;
-        }
-        // Determine if the API requires authentication (token)
-        let token = '';
-        try {
-          token = localStorage.getItem('token') || '';
-        } catch {}
-        if (intent.token !== undefined && intent.token !== '') {
-          intent.token = token;
-        }
-        if (user && user._id) {
-          intent.params.userId = user._id;
-        }
-        // Call the API and get the result
-        const apiResult = await callApiByIntent(intent);
-        let apiObj: any = apiResult;
-        if (typeof apiResult === 'string') {
-          try {
-            apiObj = JSON.parse(apiResult);
-          } catch {
-            apiObj = {};
-          }
-        }
-        const listings = apiObj.data?.listing || [];
-        setMessages(prev => [
+      // Check for OpenRouter API key before calling mcpChatbotLoop
+      if (!process.env.REACT_APP_OPENROUTER_API_KEY) {
+        setMessages(prev => ([
           ...prev,
           {
-            message: listings.length > 0 ? 'Properties found!' : 'No properties found.',
+            message: 'Sorry, the AI service is temporarily unavailable (missing API key). Please contact support.',
             type: 'bot',
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            isHtml: true
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           }
-        ]);
+        ]));
         setLoading(false);
-        return; // Do not display the JSON intent block
+        return;
       }
-
-      // If no intent, display the bot's reply as usual
-      setMessages(prev => [
+      // Prepare history for MCP (convert messages to expected format)
+      const messageHistory = messages.map(msg => ({
+        role: msg.type === 'user' ? 'user' : 'assistant',
+        content: typeof msg.message === 'string' ? msg.message : ''
+      }));
+      // Call MCP backend with user and access control
+      const botReply = await mcpChatbotLoop({ message, history: messageHistory, user, canAccessTool, getAccessError });
+      setMessages(prev => ([
         ...prev,
         {
           message: botReply,
           type: 'bot',
+          sender: 'bot',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
-      ]);
+      ]));
       setLoading(false);
     } catch (err) {
-      console.error('OpenRouter API Error:', err);
-      setMessages(prev => [
+      setMessages(prev => ([
         ...prev,
-        { 
-          message: `Sorry, there was a problem: ${err instanceof Error ? err.message : 'Unknown error'}`, 
-          type: 'bot', 
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        {
+          message: `Sorry, there was a problem: ${err instanceof Error ? err.message : 'Unknown error'}`,
+          type: 'bot',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
-      ]);
+      ]));
       setLoading(false);
     }
   };

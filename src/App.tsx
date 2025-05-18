@@ -10,7 +10,7 @@ import { AuthProvider } from "./hooks/useAuth";
 import { MessageModalProvider } from "./contexts/MessageModalProvider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "./utils/queryClient";
-import { ChatWidget } from "./components";
+import ChatWidget from './components/ChatWidget';
 
 function App() {
   const [showChat, setShowChat] = useState(false);

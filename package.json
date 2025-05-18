@@ -6,12 +6,9 @@
     "@date-io/date-fns": "^2.17.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@google/generative-ai": "^0.24.1",
     "@hello-pangea/dnd": "^18.0.1",
     "@mui/lab": "^5.0.0-alpha.145",
     "@mui/material": "^5.14.10",
-    "@radix-ui/react-avatar": "^1.1.9",
-    "@radix-ui/react-slot": "^1.2.2",
     "@react-google-maps/api": "^2.19.3",
     "@tanstack/react-query": "^4.35.3",
     "@tanstack/react-query-devtools": "^4.35.3",
@@ -24,7 +21,6 @@
     "bootstrap": "^5.2.3",
     "buffer": "^6.0.3",
     "chart.js": "^4.2.1",
-    "class-variance-authority": "^0.7.1",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
@@ -36,7 +32,6 @@
     "html2canvas": "^1.4.1",
     "i18next": "^22.4.15",
     "jspdf": "^2.5.2",
-    "lucide-react": "^0.511.0",
     "moment": "^2.29.4",
     "openai": "^4.98.0",
     "pdfmake": "^0.2.18",
@@ -52,6 +47,7 @@
     "react-final-form-arrays": "^3.1.4",
     "react-flags-select": "^2.2.3",
     "react-glider": "^4.0.2",
+    "react-markdown": "^8.0.7",
     "react-paginate": "^8.2.0",
     "react-range": "^1.8.14",
     "react-router-dom": "^6.8.1",
@@ -114,5 +110,6 @@
   },
   "engines": {
     "node": ">=16.x"
-  }
+  },
+  "proxy": "https://openrouter.ai"
 }

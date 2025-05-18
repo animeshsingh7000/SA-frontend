@@ -1,19 +1,45 @@
-<<<<<<< HEAD
 # SA-frontend
-=======
-# Stay Attache Frontend - Developer Onboarding
 
-**IMPORTANT:** All code contributions must follow the [Stay Attache Coding Guidelines](../.cursor/rules/coding-guidelines.md).
+# MCP Chatbot Architecture, Ownership, and Onboarding
 
-- Use the prescribed folder structure:
-  - `src/components` for UI components
-  - `src/api` for API integration
-  - `src/hooks` for custom hooks
-  - `src/contexts` for context providers
-  - `src/utils` for utility functions
-  - `src/types` for TypeScript interfaces
-- Enforce linting and formatting with ESLint and Prettier (see `context7/eslint.config.js` and `context7/prettier.config.mjs`).
-- Review and follow all onboarding and best practices in the coding guidelines before starting work.
+## Overview
+This project implements a Model Context Protocol (MCP)-driven chatbot architecture for Stay Attaché, enabling secure, role-aware, GET-only API access via a registry-driven system. All chatbot actions are mediated by a modular, versioned system prompt and a secure dispatcher utility.
+
+## System Architecture & Flow
+- **apiTools.ts**: Central registry of all eligible GET endpoints, with path, roles, params, and descriptions.
+- **useRoleAccess.ts**: Hook for role-aware access control, using the user object from useAuth.
+- **mcpDispatcher.ts**: Dispatcher utility that validates endpoint, method, role, and auth before making API calls. Returns only standardized error objects.
+- **promptBuilder.ts**: Modular, versioned system prompt builder that injects persona, role, tool list, examples, privacy, error handling, version, and changelog.
+- **mcpChatbotLoop.ts**: Main chatbot loop that builds the prompt, interacts with the LLM, handles tool calls, and returns LLM-phrased results/errors.
+- **StepsTakenToMCP.md**: Running changelog and onboarding reference for all MCP migration work.
+
+## How to Add/Update Endpoints, Roles, or Prompts
+1. **Add or update GET endpoints** in `apiTools.ts`, specifying path, method, roles, params, and description. Comment any ambiguities for review.
+2. **Update the prompt builder** (`promptBuilder.ts`) if you add new prompt modules, examples, or change the persona.
+3. **If you add new roles**, update the registry and ensure `useRoleAccess.ts` and the prompt builder support the new role.
+4. **Document all changes** in `StepsTakenToMCP.md` and update the changelog/version in the prompt builder.
+
+## Ownership & Change Approval
+- The MCP registry (`apiTools.ts`) and prompt (`promptBuilder.ts`) have clear owners. All changes must be reviewed and approved by the designated owner(s).
+- Use the changelog in `StepsTakenToMCP.md` and the prompt version/changelog for auditability.
+- For major changes, update onboarding documentation and notify the team.
+
+## Onboarding Steps for New Developers
+1. Read `StepsTakenToMCP.md` for a full history of the MCP migration and rationale for all major decisions.
+2. Review the architecture overview above and the code in `apiTools.ts`, `mcpDispatcher.ts`, `promptBuilder.ts`, and `mcpChatbotLoop.ts`.
+3. Follow the coding guidelines and security rationale below.
+
+## Security Rationale & Extension Patterns
+- **JWT/auth is managed exclusively via `useAuth`.** Never access localStorage directly in new code.
+- **Role checks use the user object from `useAuth`.** All access and tool exposure is determined by the user's role.
+- **Only GET endpoints are ever exposed to the chatbot.** All write actions are blocked.
+- **All errors/results are LLM-phrased.** Never leak raw backend errors.
+- **To extend roles or endpoints:**
+  - Add new roles to the registry and update `useRoleAccess.ts`.
+  - Add new endpoints to `apiTools.ts` and update the prompt builder as needed.
+  - Document all changes and update onboarding docs.
+
+For more details, see the full MCP migration log in `StepsTakenToMCP.md`.
 
 ---
 
@@ -63,4 +89,3 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
->>>>>>> 87a3e08 (Initial commit)

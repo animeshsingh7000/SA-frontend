@@ -13,6 +13,7 @@ export interface User {
   images: any;
   isAttache: boolean;
   isGuest: boolean;
+  activeToken?: string; // JWT token for authenticated API calls
 }
 
 export interface AuthType {

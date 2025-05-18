@@ -1,0 +1,1727 @@
+openapi: 3.0.3
+info:
+  title: Stay Attache API
+  version: 1.0.0
+  description: |
+    This OpenAPI (Swagger) specification describes the Stay Attache API endpoints, authentication, and usage patterns as inferred from the frontend codebase. Some request/response schemas are best-guess and may need to be updated with backend details.
+  contact:
+    name: Stay Attache Team
+    url: https://stayattache.com
+    email: support@stayattache.com
+servers:
+  - url: https://api.stayattache.com/api/v1
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        status:
+          type: integer
+      required: [message, status]
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+      required: [id, email, name, role]
+    Property:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        address:
+          type: string
+        ownerId:
+          type: string
+        status:
+          type: string
+        price:
+          type: number
+        images:
+          type: array
+          items:
+            type: string
+      required: [id, title, address, ownerId, status, price]
+    Inquiry:
+      type: object
+      properties:
+        id:
+          type: string
+        propertyId:
+          type: string
+        userId:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+      required: [id, propertyId, userId, message, status]
+    Featurette:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+      required: [id, title, description]
+    Amenity:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required: [id, name]
+
+paths:
+  /user/register:
+    post:
+      tags: [Authentication]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+                name: { type: string }
+              required: [email, password, name]
+      responses:
+        '201':
+          description: User registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user/login:
+    post:
+      tags: [Authentication]
+      summary: Login and receive JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+              required: [email, password]
+      responses:
+        '200':
+          description: JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user/logout:
+    patch:
+      tags: [Authentication]
+      summary: Logout user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logged out
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user/forgot-password:
+    post:
+      tags: [Authentication]
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+              required: [email]
+      responses:
+        '200':
+          description: Password reset email sent
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user/reset-password:
+    post:
+      tags: [Authentication]
+      summary: Reset password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token: { type: string }
+                newPassword: { type: string }
+              required: [token, newPassword]
+      responses:
+        '200':
+          description: Password reset
+        '400':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user/change-password:
+    post:
+      tags: [Authentication]
+      summary: Change password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword: { type: string }
+                newPassword: { type: string }
+              required: [oldPassword, newPassword]
+      responses:
+        '200':
+          description: Password changed
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /faq/list:
+    get:
+      tags: [Public]
+      summary: Get FAQs
+      responses:
+        '200':
+          description: List of FAQs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    question: { type: string }
+                    answer: { type: string }
+  /user/attache-user-list:
+    get:
+      tags: [Public]
+      summary: Get team/user list
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /news/list:
+    get:
+      tags: [Public]
+      summary: Get news
+      responses:
+        '200':
+          description: List of news
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title: { type: string }
+                    content: { type: string }
+                    date: { type: string, format: date-time }
+  /contact-us/add:
+    post:
+      tags: [Public]
+      summary: Contact form
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                email: { type: string }
+                message: { type: string }
+              required: [name, email, message]
+      responses:
+        '200':
+          description: Contact form submitted
+  /configuration/amenities:
+    get:
+      tags: [Configuration]
+      summary: List amenities
+      responses:
+        '200':
+          description: List of amenities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Amenity'
+  /configuration/unit-amenities:
+    get:
+      tags: [Configuration]
+      summary: List unit amenities
+      responses:
+        '200':
+          description: List of unit amenities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Amenity'
+  /configuration/property-amenities:
+    get:
+      tags: [Configuration]
+      summary: List property amenities
+      responses:
+        '200':
+          description: List of property amenities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Amenity'
+  /configuration/shared-amenities:
+    get:
+      tags: [Configuration]
+      summary: List shared amenities
+      responses:
+        '200':
+          description: List of shared amenities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Amenity'
+  /configuration/shared-amenities-v2:
+    get:
+      tags: [Configuration]
+      summary: List shared amenities (v2)
+      responses:
+        '200':
+          description: List of shared amenities (v2)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Amenity'
+  /configuration/states-code:
+    get:
+      tags: [Configuration]
+      summary: List state codes
+      responses:
+        '200':
+          description: List of state codes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /property/list:
+    get:
+      tags: [Property]
+      summary: List properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /property/add:
+    post:
+      tags: [Property]
+      summary: Add property
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+      responses:
+        '201':
+          description: Property added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+  /property/update:
+    put:
+      tags: [Property]
+      summary: Update property
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+      responses:
+        '200':
+          description: Property updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+  /property/{id}:
+    get:
+      tags: [Property]
+      summary: Get property by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Property details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+  /property/list/owner:
+    get:
+      tags: [Property]
+      summary: List owner properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of owner properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /listing/list/rental:
+    get:
+      tags: [Property]
+      summary: List rental properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of rental properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /favorites/properties:
+    get:
+      tags: [Property]
+      summary: List favorite properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of favorite properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /property-comparison/list:
+    get:
+      tags: [Property]
+      summary: Compare properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Property comparison
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /featurette/list:
+    get:
+      tags: [AttacheProperty]
+      summary: List featurettes
+      responses:
+        '200':
+          description: List of featurettes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Featurette'
+  /listing/feature-list:
+    get:
+      tags: [AttacheProperty]
+      summary: List features
+      responses:
+        '200':
+          description: List of features
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    name: { type: string }
+  /listing/list:
+    get:
+      tags: [AttacheProperty]
+      summary: Browse properties
+      responses:
+        '200':
+          description: List of properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /listing/{id}:
+    get:
+      tags: [AttacheProperty]
+      summary: Property detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Property details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+  /listing/map-list:
+    get:
+      tags: [AttacheProperty]
+      summary: Map view of properties
+      responses:
+        '200':
+          description: Map view of properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /owner/dashboard-counts:
+    get:
+      tags: [Owner]
+      summary: Owner dashboard
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dashboard counts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  propertiesCount: { type: integer }
+                  leasesCount: { type: integer }
+                  inquiriesCount: { type: integer }
+  /owner/inquiry:
+    post:
+      tags: [Owner]
+      summary: Submit inquiry
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Inquiry'
+      responses:
+        '201':
+          description: Inquiry submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inquiry'
+  /owner/leases:
+    get:
+      tags: [Owner]
+      summary: List leases
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of leases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    propertyId: { type: string }
+                    startDate: { type: string, format: date }
+                    endDate: { type: string, format: date }
+                    status: { type: string }
+  /owner/leases/{id}:
+    get:
+      tags: [Owner]
+      summary: Lease detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lease details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  propertyId: { type: string }
+                  startDate: { type: string, format: date }
+                  endDate: { type: string, format: date }
+                  status: { type: string }
+  /owner/block-dates:
+    get:
+      tags: [Owner]
+      summary: List block dates
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of block dates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    propertyId: { type: string }
+                    startDate: { type: string, format: date }
+                    endDate: { type: string, format: date }
+  /owner/block-dates/add:
+    post:
+      tags: [Owner]
+      summary: Add block date
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                propertyId: { type: string }
+                startDate: { type: string, format: date }
+                endDate: { type: string, format: date }
+              required: [propertyId, startDate, endDate]
+      responses:
+        '201':
+          description: Block date added
+  /owner/block-dates/{id}/update:
+    patch:
+      tags: [Owner]
+      summary: Update block date
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate: { type: string, format: date }
+                endDate: { type: string, format: date }
+      responses:
+        '200':
+          description: Block date updated
+  /admin/properties/all:
+    get:
+      tags: [AdminProperty]
+      summary: List all properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of all properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /admin/properties/active:
+    get:
+      tags: [AdminProperty]
+      summary: List active properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of active properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /admin/properties/on-lease:
+    get:
+      tags: [AdminProperty]
+      summary: List on-lease properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of on-lease properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /admin/properties/available:
+    get:
+      tags: [AdminProperty]
+      summary: List available properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of available properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /admin/properties/create:
+    post:
+      tags: [AdminProperty]
+      summary: Create property
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+      responses:
+        '201':
+          description: Property created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+  /admin/properties/{id}/update:
+    patch:
+      tags: [AdminProperty]
+      summary: Update property
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+      responses:
+        '200':
+          description: Property updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+  /admin/properties/{id}/details:
+    get:
+      tags: [AdminProperty]
+      summary: Property details
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Property details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+  /admin/properties/{id}/upload-image:
+    patch:
+      tags: [AdminProperty]
+      summary: Upload property image
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image: { type: string, format: binary }
+      responses:
+        '200':
+          description: Image uploaded
+  /admin/properties/{id}/image/{imageId}:
+    delete:
+      tags: [AdminProperty]
+      summary: Delete property image
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Image deleted
+  /admin/properties/{id}/images-list:
+    get:
+      tags: [AdminProperty]
+      summary: List property images
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of property images
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /admin/properties/{id}/update-image-order:
+    patch:
+      tags: [AdminProperty]
+      summary: Update image order
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imageOrder:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Image order updated
+  /admin/lease/template:
+    get:
+      tags: [AdminOperations]
+      summary: Lease templates
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of lease templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    name: { type: string }
+  /admin/building/create:
+    post:
+      tags: [AdminOperations]
+      summary: Create building
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                address: { type: string }
+              required: [name, address]
+      responses:
+        '201':
+          description: Building created
+  /admin/building:
+    get:
+      tags: [AdminOperations]
+      summary: List buildings
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of buildings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    name: { type: string }
+                    address: { type: string }
+  /admin/recurring:
+    get:
+      tags: [AdminOperations]
+      summary: Recurring rates
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of recurring rates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    amount: { type: number }
+                    frequency: { type: string }
+  /admin/rcs/list:
+    get:
+      tags: [AdminOperations]
+      summary: Recurring schedule list
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of recurring schedules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    schedule: { type: string }
+  /admin/dcs/list:
+    get:
+      tags: [AdminOperations]
+      summary: Departure schedule list
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of departure schedules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    schedule: { type: string }
+  /admin/lease/template/{id}:
+    get:
+      tags: [AdminOperations]
+      summary: Lease template detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lease template details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  name: { type: string }
+                  content: { type: string }
+  /admin/recurring/{id}:
+    get:
+      tags: [AdminOperations]
+      summary: Recurring rate detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Recurring rate details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  amount: { type: number }
+                  frequency: { type: string }
+  /admin/recurring/{id}:
+    put:
+      tags: [AdminOperations]
+      summary: Update recurring rate
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount: { type: number }
+                frequency: { type: string }
+      responses:
+        '200':
+          description: Recurring rate updated
+  /owner/inquiries:
+    get:
+      tags: [AdminOwnerInquiry]
+      summary: List owner inquiries
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of owner inquiries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Inquiry'
+  /owner/inquiry-status-update:
+    post:
+      tags: [AdminOwnerInquiry]
+      summary: Update inquiry status
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                inquiryId: { type: string }
+                status: { type: string }
+              required: [inquiryId, status]
+      responses:
+        '200':
+          description: Inquiry status updated
+  /property/admin-update:
+    put:
+      tags: [AdminOwnerInquiry]
+      summary: Admin update property
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+      responses:
+        '200':
+          description: Property updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+  /dynamic-pricing/property-price:
+    post:
+      tags: [AdminOwnerInquiry]
+      summary: Calculate price
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                propertyId: { type: string }
+                startDate: { type: string, format: date }
+                endDate: { type: string, format: date }
+              required: [propertyId, startDate, endDate]
+      responses:
+        '200':
+          description: Calculated price
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  price: { type: number }
+  /dynamic-pricing/list:
+    get:
+      tags: [AdminOwnerInquiry]
+      summary: List dynamic pricing
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of dynamic pricing
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    propertyId: { type: string }
+                    price: { type: number }
+  /dynamic-pricing/update:
+    patch:
+      tags: [AdminOwnerInquiry]
+      summary: Update dynamic pricing
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id: { type: string }
+                price: { type: number }
+              required: [id, price]
+      responses:
+        '200':
+          description: Dynamic pricing updated
+  /featurette/add:
+    post:
+      tags: [AdminOwnerInquiry]
+      summary: Add featurette
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Featurette'
+      responses:
+        '201':
+          description: Featurette added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Featurette'
+  /featurette/{id}/delete:
+    delete:
+      tags: [AdminOwnerInquiry]
+      summary: Delete featurette
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Featurette deleted
+  /featurette/{id}/details:
+    get:
+      tags: [AdminOwnerInquiry]
+      summary: Featurette details
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Featurette details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Featurette'
+  /featurette/{id}/update:
+    patch:
+      tags: [AdminOwnerInquiry]
+      summary: Update featurette
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Featurette'
+      responses:
+        '200':
+          description: Featurette updated
+  /listing/feature-list:
+    get:
+      tags: [AdminOwnerInquiry]
+      summary: List features
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of features
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    name: { type: string }
+  /listing/feature-list/{id}:
+    patch:
+      tags: [AdminOwnerInquiry]
+      summary: Update feature
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+      responses:
+        '200':
+          description: Feature updated
+  /listing/feature-list/{id}/delete:
+    delete:
+      tags: [AdminOwnerInquiry]
+      summary: Delete feature
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Feature deleted
+  /owner/inquiry/{id}:
+    get:
+      tags: [AdminOwnerInquiry]
+      summary: Inquiry detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Inquiry details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inquiry'
+  /owner/inquiry/{id}/update:
+    patch:
+      tags: [AdminOwnerInquiry]
+      summary: Update inquiry
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Inquiry'
+      responses:
+        '200':
+          description: Inquiry updated
+  /rental/inquiry:
+    post:
+      tags: [Rental]
+      summary: Submit rental inquiry
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                propertyId: { type: string }
+                message: { type: string }
+              required: [propertyId, message]
+      responses:
+        '201':
+          description: Rental inquiry submitted
+  /listing/mapped-list:
+    get:
+      tags: [Rental]
+      summary: Get mapped property list
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of mapped properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /listing/mapped-list-owner:
+    get:
+      tags: [Rental]
+      summary: Get mapped property list for owner
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of mapped properties for owner
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /rental/leases:
+    get:
+      tags: [Rental]
+      summary: List rental leases
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of rental leases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    propertyId: { type: string }
+                    startDate: { type: string, format: date }
+                    endDate: { type: string, format: date }
+                    status: { type: string }
+  /favorites/property:
+    get:
+      tags: [Favorites]
+      summary: Get favorite property
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: propertyId
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Favorite property
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+  /property-notes/list:
+    get:
+      tags: [Notes]
+      summary: List property notes
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of property notes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    propertyId: { type: string }
+                    note: { type: string }
+                    createdAt: { type: string, format: date-time }
+  /property-notes/submit:
+    post:
+      tags: [Notes]
+      summary: Submit property note
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                propertyId: { type: string }
+                note: { type: string }
+              required: [propertyId, note]
+      responses:
+        '201':
+          description: Property note submitted
+  /rental/invoice:
+    get:
+      tags: [Rental]
+      summary: Get rental invoice detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: invoiceId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Rental invoice detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  propertyId: { type: string }
+                  amount: { type: number }
+                  dueDate: { type: string, format: date }
+  /admin/region/list:
+    get:
+      tags: [AdminRegion]
+      summary: List regions
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of regions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    name: { type: string }
+  /admin/region/create:
+    post:
+      tags: [AdminRegion]
+      summary: Create region
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+              required: [name]
+      responses:
+        '201':
+          description: Region created
+  /admin/region:
+    get:
+      tags: [AdminRegion]
+      summary: Get region detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: regionId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Region detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string }
+                  name: { type: string }
+  /common:
+    get:
+      tags: [Common]
+      summary: Get common data
+      responses:
+        '200':
+          description: Common data
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /admin/building/list:
+    get:
+      tags: [AdminBuilding]
+      summary: List buildings
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of buildings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    name: { type: string }
+                    address: { type: string }
+  /admin/blogs:
+    get:
+      tags: [AdminBlog]
+      summary: Get blogs
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of blogs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    title: { type: string }
+                    content: { type: string }
+  /admin/blogs/list:
+    get:
+      tags: [AdminBlog]
+      summary: List blogs
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of blogs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    title: { type: string }
+                    content: { type: string }
+  /admin/promoted-properties:
+    get:
+      tags: [AdminProperty]
+      summary: Get promoted properties
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of promoted properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /featurette/list/admin:
+    get:
+      tags: [AdminFeaturette]
+      summary: List admin featurettes
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of admin featurettes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Featurette' 
